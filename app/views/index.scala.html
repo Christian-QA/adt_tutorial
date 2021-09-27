@@ -1,5 +1,15 @@
-@()
+@(forecast: String)
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@main("Weather App") {
+  <h1>It is @forecast</h1>
+
+  @if(forecast == "Sunny") {
+    <img src="@routes.Assets.versioned("images/sunny.gif")">
+  } else if(forecast == "Rainy") {
+    <img src="@routes.Assets.versioned("images/rainy.gif")">
+  } else if(forecast == "Snowy") {
+    <img src="@routes.Assets.versioned("images/snowy.gif")">
+  } else {
+    <img src="@routes.Assets.versioned("images/cloudy.gif")">
+  }
 }
