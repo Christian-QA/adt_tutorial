@@ -21,9 +21,9 @@ class WeatherConnector {
 
     val random = new Random
 
-    val forecast = pick(possibleForecasts, random)
     val status = pick(possibleStatuses, random)
+    val body = if(status == OK) pick(possibleForecasts, random) else "Something has gone wrong"
 
-    HttpResponse(status, forecast)
+    HttpResponse(status, body)
   }
 }
