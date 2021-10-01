@@ -15,8 +15,6 @@ class WeatherGen {
 
     val random = new Random
 
-    pick(possibleStatuses, random)
-
     HttpResponse(pick(possibleStatuses, random), pick(possibleForecasts, random))
   }
 }
