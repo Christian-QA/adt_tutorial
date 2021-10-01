@@ -1,29 +1,27 @@
 package connectors
 
-
+import backend.WeatherGen
 import play.api.http.Status._
 
-import scala.util.Random
+import javax.inject.Inject
+
+case class HttpException(message: String, status: Int) extends Exception(message)
+class NotFoundException(message: String) extends HttpException(message, NOT_FOUND)
+class BadRequestException(message: String) extends HttpException(message, NOT_FOUND)
+class Upstream5xxResponse(message: String) extends HttpException(message, NOT_FOUND)
 
 case class HttpResponse(status: Int, body: String)
 
-class WeatherConnector {
-
-  private def pick[A](possibilities: Seq[A], random: Random): A = {
-    possibilities(
-      random.nextInt(possibilities.length)
-    )
-  }
-
+class WeatherConnector @Inject()(weatherGen: WeatherGen) {
   def getForecast(): HttpResponse = {
-    val possibleForecasts = Seq("Sunny", "Rainy", "Snowy", "Cloudy")
-    val possibleStatuses = Seq(OK, OK, OK, NOT_FOUND, INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE)
 
-    val random = new Random
+    val response = weatherGen.createForecast()
 
-    val status = pick(possibleStatuses, random)
-    val body = if(status == OK) pick(possibleForecasts, random) else "Something has gone wrong"
-
-    HttpResponse(status, body)
+    response.status match {
+      case status if status == 200 => response
+      case status if status == 404 => throw new NotFoundException("Could not find a forecast")
+      case status if status == 400 => throw new BadRequestException("Something bad happened")
+      case status if status >= 500 => throw new Upstream5xxResponse("Someone's stolen your barometer")
+    }
   }
 }
