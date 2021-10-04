@@ -1,13 +1,17 @@
-@(forecast: String)
+
+
+@import model._
+
+@(forecast: Forecast)
 
 @main("Weather App") {
   <h1>It is @forecast</h1>
 
-  @if(forecast == "Sunny") {
+  @if(forecast == Sunny) {
     <img src="@routes.Assets.versioned("images/sunny.gif")">
-  } else if(forecast == "Rainy") {
+  } else if(forecast == Rainy) {
     <img src="@routes.Assets.versioned("images/rainy.gif")">
-  } else if(forecast == "Snowwy") {
+  } else if(forecast == Snowy) {
     <img src="@routes.Assets.versioned("images/snowy.gif")">
   } else {
     <img src="@routes.Assets.versioned("images/cloudy.gif")">

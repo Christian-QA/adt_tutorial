@@ -10,8 +10,8 @@ class HomeController @Inject()(weatherConnector: WeatherConnector, val controlle
 
   def index() = Action { implicit request: Request[AnyContent] =>
 
-    val forecast = weatherConnector.getForecast()
+    val data = weatherConnector.getForecast()
 
-    Ok(views.html.index(forecast.body))
+    data.fold(error => InternalServerError(views.html.errorPage(error.message)), success => Ok(views.html.index(success.forecast)))
   }
 }
